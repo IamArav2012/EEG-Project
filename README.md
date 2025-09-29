@@ -1,18 +1,18 @@
-# EEG-Project
-We are testing how class weights ***and*** type of model affects the classification ability of the Valence, Arousal, Dominance, and Liking labels from the Deap-Dataset. We use three different types of ML models which are Random Forest, Multi-Layered Perceptron (MLP), and an eXtreme Gradient Boosting classifier (XGB). We use multi-label binary classification where we take the labels from the deap dataset and deduce a binary label-matrix by setting all values <5 to 0 and all values ≥5 to 1. 
+# EEG-Emotion-MLP-vs-Ensemble
+This repository investigates how **class weights** and **model type** jointly impact the multi-label binary classification of Valence, Arousal, Dominance, and Liking using the **DEAP dataset**. We compare three distinct machine learning algorithms **Random Forest, Multi-Layered Perceptron (MLP), and eXtreme Gradient Boosting (XGB)** and employ a standardized median split where continuous emotional ratings are binarized by setting values less than 5 to 0 (low) and values greater than or equal to 5 to 1 (high).
 
 ## Experiment
 1. Essential Question 
-2. Background
-3. Hypothesis
-4. Procedure
-5. Raw Data
-6. Analysis
-7. Error
-7. Conclusion
+2. Hypothesis
+3. Procedure
+4. Data
+5. Analysis
+6. Conclusion
 
 ## Essential Question
 How do class weights and the type of model affect the classification ability of Machine Learning models on the Valence, Arousal, Dominance, and Liking labels from the Deap-Dataset?
+
+---
 
 ### Hypothesis 
 We are testing two hypotheses:
@@ -29,6 +29,7 @@ Experiment setup:
 - Main Metrics: `f1`(`precision`, `recall`), `balanced_accuracy`,
 - Other Metrics: `hamming_loss`, `kappa`, `confusion matrix`(`tp`, `tn`, `fp`, `fn`)
 
+---
 ### Data Collection
 The data was collected using the following procedure: 
 1. Run a specific model with a certain label type
@@ -70,6 +71,7 @@ The data was collected using the following procedure:
 |random_forest_unweighted|Dominance|0.7388|0.57             |
 |random_forest_unweighted|Liking   |0.7959|0.5742           |
 
+---
 ### Graphs
 ![Descriptive Alt Text for Image](/Images/F1_Score_by_Label_Weighted_vs_Unweighted.png)
 ---
@@ -88,8 +90,7 @@ The data was collected using the following procedure:
 
 </details>
 
-## Analysis
-### Analysis of Weighting Effects on Classification
+## Analysis of Weighting Effects on Classification
 
 This analysis examines how applying **class weights** impacted the performance of the Multi-Layer Perceptron (`MLP`), Random Forest (`RF`), and XGBoost (`XGB`) models across four emotion labels (Valence, Arousal, Dominance, Liking).
 * * * * *
@@ -152,5 +153,30 @@ Weighting led to **consistent improvement** across the board.
 
 The **Random Forest** model had the best classification scores, with the **XGBoost** model coming in a close second. The **MLP** model performed the worst by a significant and upsetting margin.
 
-## Conclusion
-Class weights only improved performance in XGBoost, while harming Random Forest and MLP. Ensemble models (RF and XGB) were far more effective than MLP on the DEAP features, with Random Forest best in raw performance and XGBoost best in leveraging weights to handle imbalance. Thus, both model type and the use of class weights strongly influence classification performance, but their effects are algorithm-dependent.
+## Conclusion: Model Performance and Weighting Effects
+The classification analysis yielded significant, model-dependent results that largely **rejected the initial hypothesis** that the Multi-Layer Perceptron (MLP) would outperform ensemble methods on the DEAP dataset.
+
+### Key Findings on Model Efficacy
+
+Ensemble models (Random Forest and XGBoost) demonstrated clear superiority, confirming their effectiveness on feature-engineered physiological data:
+
+-   **Random Forest (RF)** achieved the **best raw classification performance**, securing the top rank.
+
+-   **XGBoost (XGB)** followed closely, proving to be the most successful at **leveraging class weights** to handle label imbalance.
+
+-   **MLP performed the worst** by a significant margin, struggling to utilize the engineered EEG features effectively.
+
+The likely cause for the MLP's poor performance is that the chosen feature set (Hjorth+Bandpower+...) **erased the inter-temporal relationships** inherent in the raw EEG signal. Since the standard MLP does not inherently capture sequential dependencies, it could not leverage the data's temporal structure. If the models were fed highly-permutated data (like raw EEG), a specialized neural network (such as an LSTM) or even a basic MLP might have demonstrated better performance.
+
+---
+### The Model-Dependent Effect of Class Weights
+
+The analysis revealed that the utility of class weights is **algorithm-dependent**, challenging the universal assumption that weighting always improves performance on imbalanced data:
+
+-   **XGBoost:** Performance **improved significantly** across F1-Score and Balanced Accuracy, showing that this gradient-boosting method successfully utilized the weighting scheme.
+
+-   **Random Forest:** Performance was **slightly harmed**, suggesting that the applied weights over-penalized the majority classes or introduced instability, resulting in a net decrease in F1-Score and Balanced Accuracy.
+
+-   **MLP:** Weighting caused a **severe collapse in classification ability** (particularly F1-Score), indicating that the weighting scheme destabilized the network's optimization process.
+
+In summary, when trained with this specific engineered feature set, ensemble methods clearly outperform MLP. Ultimately, classification performance is strongly and distinctly influenced by both the **choice of model type** and the **application of class weights**, necessitating careful, algorithm-specific evaluation for optimal results.
