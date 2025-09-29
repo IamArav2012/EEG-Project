@@ -42,6 +42,7 @@ The data was collected using the following procedure:
 ## Data
 [Google Drive Link](https://drive.google.com/file/d/18z3dpyH-sQxGPblzBjFJTmk49Cvcdj-_/view?usp=sharing) containing all trained models.
 
+### Data Table
 |Model_key               |Label    |F1    |Balanced Accuracy|
 |------------------------|---------|------|-----------------|
 |mlp_weighted            |Valence  |0.1379|0.5039           |
@@ -68,6 +69,24 @@ The data was collected using the following procedure:
 |random_forest_unweighted|Arousal  |0.4   |0.6242           |
 |random_forest_unweighted|Dominance|0.7388|0.57             |
 |random_forest_unweighted|Liking   |0.7959|0.5742           |
+
+### Graphs
+![Descriptive Alt Text for Image](/Images/F1_Score_by_Label_Weighted_vs_Unweighted.png)
+---
+![Descriptive Alt Text for Image](/Images/F1_Score_Comparison_Across_Models.png)
+---
+![Descriptive Alt Text for Image](/Images/Average_F1_Score_Across_Labels.png)
+
+<details>
+  <summary>Click to view Balanced Accuracy Plots</summary>
+
+![Descriptive Alt Text for Image](/Images/Balanced_Accuracy_by_Label_Weighted_vs_Unweighted.png)
+---
+![Descriptive Alt Text for Image](/Images/Balanced_Accuracy_Comparison_Across_Models.png)
+---
+![Descriptive Alt Text for Image](/Images/Average_Balanced_Accuracy_Across_Labels.png)
+
+</details>
 
 ## Analysis
 ### Analysis of Weighting Effects on Classification
