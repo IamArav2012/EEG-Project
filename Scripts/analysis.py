@@ -37,17 +37,17 @@ def results_to_dataframe(results_dict):
             kappa = cohen_kappa_score(y_true, y_pred)
 
             rows.append({
-                "model_key": model_key,
-                "label": label,
-                "precision": prec,
-                "recall": rec,
-                "f1": f1,
-                "balanced_accuracy": bal_acc,
-                "hamming_loss": ham_loss,
-                "kappa": kappa,
+                "Model_key": model_key,
+                "Label": label,
+                "Precision": prec,
+                "Recall": rec,
+                "F1": f1,
+                "Balanced_accuracy": bal_acc,
+                "Hamming_loss": ham_loss,
+                "Kappa": kappa,
                 "tp": int(tp), "tn": int(tn), "fp": int(fp), "fn": int(fn),
-                "total_pos": int(np.sum(y_true==1)),
-                "total_neg": int(np.sum(y_true==0)),
+                "Total_pos": int(np.sum(y_true==1)),
+                "Total_neg": int(np.sum(y_true==0)),
             })
     return pd.DataFrame(rows)
 
@@ -78,18 +78,18 @@ else:
     metrics_df = pd.read_csv(save_df_path)
 
 # Add model_type + weighting columns
-metrics_df["model_type"] = metrics_df["model_key"].str.extract(r"(mlp|xgb|random_forest)")
-metrics_df["weighting"] = metrics_df["model_key"].str.extract(r"(weighted|unweighted)")
+metrics_df["model_type"] = metrics_df["Model_key"].str.extract(r"(mlp|xgb|random_forest)")
+metrics_df["weighting"] = metrics_df["Model_key"].str.extract(r"(weighted|unweighted)")
 
 # Aggregate metrics
 summary = (
     metrics_df
-    .groupby(["model_type", "weighting", "label"])
+    .groupby(["model_type", "weighting", "Label"])
     .agg({
-        "f1": "mean",
-        "balanced_accuracy": "mean",
-        "kappa": "mean",
-        "hamming_loss": "mean"
+        "F1": "mean",
+        "Balanced_accuracy": "mean",
+        "Kappa": "mean",
+        "Hamming_loss": "mean"
     })
     .reset_index()
 )
@@ -98,7 +98,7 @@ def plot_metric(metric: str, title: str, ylabel: str):
     # Weighted vs Unweighted
     g = sns.catplot(
         data=summary, kind="bar",
-        x="label", y=metric,
+        x="Label", y=metric,
         hue="weighting", col="model_type",
         height=5, aspect=1, errorbar=None
     )
@@ -110,7 +110,7 @@ def plot_metric(metric: str, title: str, ylabel: str):
 
     # Model comparison
     plt.figure(figsize=(10, 6))
-    sns.barplot(data=summary, x="label", y=metric, hue="model_type", errorbar=None)
+    sns.barplot(data=summary, x="Label", y=metric, hue="model_type", errorbar=None)
     plt.title(f"{title} Comparison Across Models")
     plt.xlabel("Label")
     plt.ylabel(ylabel)
@@ -132,18 +132,18 @@ def plot_metric(metric: str, title: str, ylabel: str):
 
 if __name__ == "__main__":
 
-    ans = input("Want f1 plots? Press Enter to continue. If not type 'next':")
+    ans = input("Want F1 plots? Press Enter to continue. If not type 'next':")
     if ans.lower() != 'next':
-        plot_metric("f1", "F1 Score", "F1 Score")
+        plot_metric("F1", "F1 Score", "F1 Score")
 
-    ans = input("Want balanced accuracy plots? Press Enter to continue. If not type 'next':")
+    ans = input("Want Balanced Accuracy plots? Press Enter to continue. If not type 'next':")
     if ans.lower() != 'next':
-        plot_metric("balanced_accuracy", "Balanced Accuracy", "Balanced Accuracy")
+        plot_metric("Balanced_accuracy", "Balanced Accuracy", "Balanced Accuracy")
 
-    ans = input("Want kappa plots? Press Enter to continue. If not type 'next':")
+    ans = input("Want Kappa plots? Press Enter to continue. If not type 'next':")
     if ans.lower() != 'next':
-        plot_metric("kappa", "Kappa", "Kappa")
+        plot_metric("Kappa", "Kappa", "Kappa")
 
-    ans = input("Want hamming loss plots? Press Enter to continue. If not type 'next':")
+    ans = input("Want Hamming Loss plots? Press Enter to continue. If not type 'next':")
     if ans.lower() != 'next':
-        plot_metric("hamming_loss", "Hamming Loss", "Hamming Loss")
+        plot_metric("Hamming_loss", "Hamming Loss", "Hamming Loss")
